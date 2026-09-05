@@ -39,7 +39,7 @@ Progress stays in local browser storage. The site collects no names or voice rec
 
 ## Validation
 
-Automated tests cover curriculum completeness, quiz choice uniqueness, sentence puzzles, progress validation, repeat completion, backup merging and German voice selection. TypeScript and both production targets are checked. Browser interaction and human listening are separate, unperformed checks. WebMCP tools are feature-detected; a supported runtime validation context was unavailable.
+Automated tests cover curriculum completeness, quiz choice uniqueness, sentence puzzles, progress validation, repeat completion, backup merging and German voice selection. TypeScript and both production targets are checked. Browser interaction and human listening are separate, unperformed checks. WebMCP registration, progress reading, valid mission opening and invalid-input rejection were verified in the supported browser tool context; no discoveries were awarded by opening a mission.
 
 ## Assets and sources
 
