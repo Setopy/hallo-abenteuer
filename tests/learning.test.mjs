@@ -104,11 +104,19 @@ test('speaking observations remain separate from practice and survive older back
   assert.equal(validProgress({ ...observed, canDo: '3' }), false);
   assert.deepEqual(mergeProgress(observed, emptyProgress).canDo, [3, 8]);
   assert.deepEqual(mergeProgress(emptyProgress, observed).canDo, [3, 8]);
-  assert.deepEqual(mergeProgress(observed, { ...emptyProgress, canDo: [8, 12] }).canDo, [3, 8, 12]);
+  assert.deepEqual(
+    mergeProgress(observed, { ...emptyProgress, canDo: [8, 12] }).canDo,
+    [3, 8, 12],
+  );
 });
 test('each story has a scene, original introduction and picture vocabulary', async () => {
-  const code = ts.transpile(fs.readFileSync(new URL('../app/storybook.ts', import.meta.url), 'utf8'), {module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022});
-  const { places, storyOpenings, pictureWords } = await import('data:text/javascript;base64,' + Buffer.from(code).toString('base64'));
+  const code = ts.transpile(
+    fs.readFileSync(new URL('../app/storybook.ts', import.meta.url), 'utf8'),
+    { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  );
+  const { places, storyOpenings, pictureWords } = await import(
+    'data:text/javascript;base64,' + Buffer.from(code).toString('base64')
+  );
   assert.equal(places.length, worlds.length);
   assert.equal(storyOpenings.length, lessons.length);
   assert.equal(new Set(storyOpenings).size, lessons.length);
@@ -117,7 +125,14 @@ test('each story has a scene, original introduction and picture vocabulary', asy
     assert.ok(place.name && place.alt && place.props);
     assert.ok(storyOpenings[lesson.id - 1]);
     assert.equal(pictureWords[lesson.world].length, 3);
-    assert.ok(pictureWords[lesson.world].every(word => word.de && word.en));
-    assert.ok(fs.statSync(new URL(`../public/scenes/sheet-${Math.floor(lesson.world/4)+1}.webp`, import.meta.url)).size > 0);
+    assert.ok(pictureWords[lesson.world].every((word) => word.de && word.en));
+    assert.ok(
+      fs.statSync(
+        new URL(
+          `../public/scenes/sheet-${Math.floor(lesson.world / 4) + 1}.webp`,
+          import.meta.url,
+        ),
+      ).size > 0,
+    );
   }
 });

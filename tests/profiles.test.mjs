@@ -7,10 +7,10 @@ import {
 } from '../lib/profiles.mjs';
 import { emptyProgress } from '../lib/learning.mjs';
 test('profile input permits short nicknames and only preset avatars', () => {
-  assert.ok(validProfileInput({ nickname: 'Sunny', avatar: 'fox' }));
-  assert.ok(validProfileInput({ nickname: 'Søren', avatar: 'panda' }));
+  assert.ok(validProfileInput({ nickname: 'Sunny', avatar: 'peter' }));
+  assert.ok(validProfileInput({ nickname: 'Søren', avatar: 'john' }));
   for (const nickname of ['', '   ', 'x'.repeat(21), 'hello\nworld'])
-    assert.equal(validProfileInput({ nickname, avatar: 'fox' }), false);
+    assert.equal(validProfileInput({ nickname, avatar: 'peter' }), false);
   assert.equal(
     validProfileInput({
       nickname: 'Sunny',

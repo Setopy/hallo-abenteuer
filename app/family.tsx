@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Home, { Saved } from './storybook-app';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import ApostleAvatar from './apostle-avatar';
 import { avatars, validProfileInput } from '@/lib/profiles.mjs';
 import { validProgress, mergeProgress } from '@/lib/learning.mjs';
 import { ArrowRight, Plus, Users, LogOut } from 'lucide-react';
@@ -27,7 +28,8 @@ export default function Family() {
     [active, setActive] = useState<string | null>(null),
     [adding, setAdding] = useState(false),
     [nickname, setNickname] = useState(''),
-    [avatar, setAvatar] = useState('fox'),
+    [avatar, setAvatar] = useState('peter'),
+    [editing, setEditing] = useState<Profile | null>(null),
     [error, setError] = useState(''),
     [creating, setCreating] = useState(false),
     [saveState, setSaveState] = useState('Saved'),
@@ -183,17 +185,27 @@ export default function Family() {
     setCreating(true);
     setError('');
     try {
-      const response = await fetch('/api/family', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      });
+      const response = await fetch(
+        editing
+          ? '/api/family/' + encodeURIComponent(editing.id)
+          : '/api/family',
+        {
+          method: editing ? 'PATCH' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        },
+      );
       const data = (await response.json()) as ApiResult;
       if (!response.ok) throw Error(data.error || 'Please try again.');
-      install([...records.current, data.profile]);
+      install(
+        editing
+          ? records.current.map((p) => (p.id === editing.id ? data.profile : p))
+          : [...records.current, data.profile],
+      );
       setActive(data.profile.id);
       setAdding(false);
       setNickname('');
+      setEditing(null);
     } catch (e) {
       setError(
         e instanceof Error ? e.message : 'Your profile could not be created.',
@@ -204,8 +216,16 @@ export default function Family() {
   }
   const child = profiles.find((p) => p.id === active),
     busy = saveState === 'Saving…' || saveState === 'Not saved yet';
-  const avatarFor = (id: string) =>
-    avatars.find((a) => a.id === id)?.symbol || '🦊';
+  function editProfile(profile: Profile) {
+    setEditing(profile);
+    setNickname(profile.nickname);
+    setAvatar(
+      avatars.some((a) => a.id === profile.avatar) ? profile.avatar : 'peter',
+    );
+    setActive(null);
+    setAdding(true);
+    setError('');
+  }
   if (loading)
     return (
       <main className="family-shell">
@@ -217,7 +237,7 @@ export default function Family() {
       <>
         <div className="family-toolbar">
           <span className="child-identity">
-            <span aria-hidden>{avatarFor(child.avatar)}</span>
+            <ApostleAvatar id={child.avatar} />
             <b>{child.nickname}’s picture book</b>
           </span>
           <span className="sync-state" role="status">
@@ -232,6 +252,13 @@ export default function Family() {
             }}
           >
             <Users size={18} /> Change child
+          </button>
+          <button
+            className="back"
+            disabled={busy}
+            onClick={() => editProfile(child)}
+          >
+            Change apostle avatar
           </button>
         </div>
         {error && (
@@ -309,7 +336,7 @@ export default function Family() {
               <h1>A picture book for every child.</h1>
               <p>
                 Grown-ups, sign in with your own ChatGPT account. Then each
-                child can choose a nickname and an animal friend.
+                child can choose a nickname and an apostle avatar.
               </p>
               <a className="primary" href={signIn} target="_top">
                 Adult sign in / create account <ArrowRight size={18} />
@@ -327,7 +354,9 @@ export default function Family() {
           ) : adding ? (
             <>
               <p className="eyebrow">YOUR VERY OWN PICTURE BOOK</p>
-              <h1>Let’s make your profile.</h1>
+              <h1>
+                {editing ? 'Choose your apostle.' : 'Let’s make your profile.'}
+              </h1>
               <form onSubmit={create}>
                 <label className="nickname-label" htmlFor="child-nickname">
                   What nickname shall we use?
@@ -346,7 +375,7 @@ export default function Family() {
                   A pretend name is great. Up to 20 characters.
                 </p>
                 <p id="avatar-label">
-                  <b>Choose your animal friend</b>
+                  <b>Choose one of the twelve apostles</b>
                 </p>
                 <RadioGroup
                   value={avatar}
@@ -361,20 +390,39 @@ export default function Family() {
                       }
                       key={a.id}
                     >
-                      <span aria-hidden>{a.symbol}</span>
+                      <ApostleAvatar id={a.id} />
                       <b>{a.name}</b>
+                      <small lang="de">{a.de}</small>
                       <RadioGroupItem value={a.id} aria-label={a.name} />
                     </label>
                   ))}
                 </RadioGroup>
+                <details className="apostle-note">
+                  <summary>About the twelve apostles</summary>
+                  <p>
+                    Revelation 21:12–14 places the tribes’ names on the gates
+                    and the apostles’ names on the foundations. This collection
+                    includes Matthias, who joined the eleven in Acts 1:26. These
+                    are imagined illustrations, not known portraits.
+                  </p>
+                  <a
+                    href="https://www.biblegateway.com/passage/?search=Revelation+21%3A12-14%3BActs+1%3A26&version=WEB"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Read with a grown-up ↗
+                  </a>
+                </details>
                 <button
                   className="primary"
                   disabled={creating || !nickname.trim()}
                   type="submit"
                 >
                   {creating
-                    ? 'Making your profile…'
-                    : 'That’s me! Let’s explore'}{' '}
+                    ? 'Saving your profile…'
+                    : editing
+                      ? 'Save my apostle'
+                      : 'That’s me! Let’s explore'}{' '}
                   <ArrowRight size={18} />
                 </button>
                 {profiles.length > 0 && (
@@ -382,7 +430,10 @@ export default function Family() {
                     className="back"
                     type="button"
                     disabled={creating}
-                    onClick={() => setAdding(false)}
+                    onClick={() => {
+                      setAdding(false);
+                      setEditing(null);
+                    }}
                   >
                     Back to our family
                   </button>
@@ -393,22 +444,32 @@ export default function Family() {
             <>
               <p className="eyebrow">WELCOME BACK</p>
               <h1>Who’s exploring today?</h1>
-              <p>Tap your animal friend to open your own stories.</p>
+              <p>Tap your apostle avatar to open your own stories.</p>
               <div className="child-grid">
                 {profiles.map((p) => (
                   <button
                     className="child-card"
                     key={p.id}
                     onClick={() => {
+                      if (!avatars.some((a) => a.id === p.avatar)) {
+                        editProfile(p);
+                        return;
+                      }
                       setActive(p.id);
                       setSaveState('Saved to your family account');
                     }}
                   >
-                    <span aria-hidden>{avatarFor(p.avatar)}</span>
+                    <ApostleAvatar id={p.avatar} />
+                    <small>
+                      {avatars.some((a) => a.id === p.avatar)
+                        ? avatars.find((a) => a.id === p.avatar)?.name
+                        : 'Choose your new apostle'}
+                    </small>
                     <b>{p.nickname}</b>
                     <small>
-                      {Object.keys(p.progress.completed).length} stories
-                      explored
+                      {Object.keys(p.progress.completed).length +
+                        (p.progress.gospel?.length || 0)}{' '}
+                      stories explored
                     </small>
                   </button>
                 ))}
@@ -417,6 +478,9 @@ export default function Family() {
                 className="secondary"
                 onClick={() => {
                   setAdding(true);
+                  setEditing(null);
+                  setNickname('');
+                  setAvatar('peter');
                   setError('');
                 }}
               >

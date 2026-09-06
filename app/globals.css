@@ -1915,3 +1915,163 @@ body {
     gap: 10px;
   }
 }
+
+.apostle-portrait {
+  display: block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #d5ac48;
+  background: #ffe9a8;
+  flex-shrink: 0;
+}
+.apostle-unknown {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #fff0c2;
+  font-size: 32px;
+}
+.child-identity .apostle-portrait {
+  width: 48px;
+  height: 48px;
+}
+.avatar-choice {
+  min-width: 0;
+  text-align: center;
+}
+.avatar-choice .apostle-portrait {
+  width: 80px;
+  height: 80px;
+}
+.avatar-choice b {
+  line-height: 1.3;
+}
+.apostle-note {
+  margin: 16px 0;
+  font-size: 14px;
+  color: #496375;
+}
+.bilingual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 14px 0;
+}
+.language-block {
+  padding: 18px;
+  border-radius: 14px;
+  background: #e0f2fc;
+  min-width: 0;
+}
+.language-block.en {
+  background: #fff1c9;
+}
+.language-block > b {
+  font-size: 12px;
+  letter-spacing: 0.8px;
+}
+.language-block p {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  margin: 10px 0 16px;
+}
+.gospel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 30px 0;
+}
+.gospel-card {
+  overflow: hidden;
+  text-align: left;
+  background: #fffef7;
+  border: 1px solid #e6cb83;
+  box-shadow: 4px 5px 0 #ead69d;
+  border-radius: 18px;
+  padding: 0;
+}
+.gospel-card > div {
+  padding: 20px;
+}
+.gospel-card h2 {
+  font:
+    bold 1.6rem/1.3 Georgia,
+    serif;
+}
+.gospel-card span {
+  color: #176a9a;
+  font-weight: bold;
+}
+.gospel-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/2;
+  border-radius: 16px;
+}
+.gospel-reader {
+  max-width: 960px;
+  margin: auto;
+}
+.gospel-reader > h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+.gospel-reader > h2 {
+  font-size: 1.3rem;
+  color: #506c7f;
+  margin-bottom: 24px;
+}
+.gospel-reader > .gospel-image {
+  max-height: 460px;
+}
+.gospel-pages {
+  margin: 30px 0;
+}
+.gospel-pages > section {
+  position: relative;
+  padding-left: 32px;
+}
+.story-line-number {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font-weight: bold;
+  color: #176a9a;
+}
+.gospel-talk {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+}
+.gospel-talk details {
+  margin: 12px 0 28px;
+}
+.gospel-talk summary {
+  cursor: pointer;
+  color: #176a9a;
+}
+.nav {
+  flex-wrap: wrap;
+  height: auto;
+}
+@media (max-width: 800px) {
+  .gospel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .bilingual,
+  .gospel-grid {
+    grid-template-columns: 1fr;
+  }
+  .avatar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .gospel-pages > section {
+    padding-left: 22px;
+  }
+}

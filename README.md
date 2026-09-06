@@ -11,7 +11,7 @@ A colourful, grown-up-supported German tutorial for young beginners, designed ar
 - A direct picture-story → speaking-role → real-life-play path. Detective games and sentence puzzles remain optional practice.
 - Props, a practical activity and a changed-detail challenge for every story. Completion requires the family to acknowledge trying the off-screen activity.
 - A speaking scrapbook with distinct, grown-up-observed skills. It asks the adult to observe changed-detail speaking on two days; it does not automatically evaluate pronunciation.
-- Adult-managed family accounts use Sites sign-in with ChatGPT. Children choose a nickname and one of six animal avatars; they do not sign in to ChatGPT themselves.
+- Adult-managed family accounts use Sites sign-in with ChatGPT. Children choose a nickname and one of twelve illustrated apostle avatars; they do not sign in to ChatGPT themselves.
 - Child progress is stored in D1 under the adult owner. Every read/write checks ownership. Revision checks prevent silent concurrent overwrites; simultaneous additions merge.
 - Existing local progress can be explicitly imported into the selected child profile. Older backups remain compatible. New backups include speaking observations.
 - No lost streaks, ads, public profiles, recording or learner leaderboard.
@@ -53,3 +53,11 @@ Original generated storybook fox illustration and twelve new picture-book scenes
 ## Database
 
 Generate schema migrations with `pnpm exec drizzle-kit generate`. The Sites deployment applies the generated Drizzle migration before publishing. Do not rewrite applied migrations. Only profile selection and pending saves are held in memory; the database is the progress source of truth. Wait for Saved before leaving a device.
+
+## Bilingual Gospel edition
+
+All 36 neighbourhood story introductions have German and English text and language-matched audio. Six additional Gospel retellings have bilingual narration, speaking questions and family activities, with an optional `gospel` progress list preserved in backups and cross-device saves. The original 36-week neighbourhood curriculum is unchanged; Gospel stories are supplementary shared reading.
+
+Apostle avatars follow the twelve after Matthias joins in Acts 1:26. The collection distinguishes James son of Zebedee and James son of Alphaeus; Thaddaeus is also called Jude/Judas son of James. Revelation 21:12–14 places the tribes’ names on gates and apostles’ names on foundations. The exact names are not enumerated there. Illustrations are imagined, not authentic likenesses. Existing animal profiles are prompted to choose an apostle without losing progress. The owner-checked profile PATCH updates nickname/avatar independently of learning-progress revisions.
+
+Gospel sources: Mark 10:13–16; John 6:1–13; Mark 4:35–41; Luke 19:1–10; Luke 2:41–52; John 21:1–14. Original simplified retellings and original teaching questions, not verbatim Bible translations. Each story links to the passage for adult reading. Source passages checked 6 September 2026.

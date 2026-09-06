@@ -1,9 +1,10 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { chooseGermanVoice } from '@/lib/learning.mjs';
+import { chooseGermanVoice, chooseEnglishVoice } from '@/lib/learning.mjs';
 export function useAudio() {
   const [status, setStatus] = useState(''),
     [playing, setPlaying] = useState(''),
+    [playingLanguage, setPlayingLanguage] = useState<'de' | 'en'>('de'),
     [slow, setSlow] = useState(true);
   const generation = useRef(0),
     utterance = useRef<SpeechSynthesisUtterance | null>(null),
@@ -27,7 +28,7 @@ export function useAudio() {
       document.removeEventListener('visibilitychange', hidden);
     };
   }, [stop]);
-  function speak(text: string) {
+  function speak(text: string, language: 'de' | 'en' = 'de') {
     stop();
     setStatus('');
     if (!('speechSynthesis' in window)) {
@@ -36,10 +37,13 @@ export function useAudio() {
       );
       return;
     }
-    const voice = chooseGermanVoice(window.speechSynthesis.getVoices());
+    const voice = (language === 'de' ? chooseGermanVoice : chooseEnglishVoice)(
+      window.speechSynthesis.getVoices(),
+    );
+    const languageName = language === 'de' ? 'German' : 'English';
     if (!voice) {
       setStatus(
-        'Ask a grown-up to add a German voice in the device’s speech settings, then try Listen again.',
+        `Ask a grown-up to add a ${languageName} voice in the device’s speech settings, then try Listen again.`,
       );
       return;
     }
@@ -54,14 +58,15 @@ export function useAudio() {
       const u = new SpeechSynthesisUtterance(parts[i]);
       utterance.current = u;
       u.voice = voice;
-      u.lang = 'de-DE';
+      u.lang = language === 'de' ? 'de-DE' : 'en-GB';
+      setPlayingLanguage(language);
       u.rate = slow ? 0.78 : 1;
       setPlaying(text);
       timeout.current = setTimeout(() => {
         if (generation.current === id) {
           stop();
           setStatus(
-            'Audio did not start. Ask a grown-up to check the sound and German voice.',
+            `Audio did not start. Ask a grown-up to check the sound and ${languageName} voice.`,
           );
         }
       }, 10000);
@@ -88,5 +93,5 @@ export function useAudio() {
     }
     play(0);
   }
-  return { status, playing, slow, setSlow, speak, stop };
+  return { status, playing, playingLanguage, slow, setSlow, speak, stop };
 }

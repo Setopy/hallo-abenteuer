@@ -27,13 +27,21 @@ import {
   shuffled,
   isBuilt,
 } from '@/lib/learning.mjs';
-import { places, storyOpenings, pictureWords } from './storybook';
+import {
+  places,
+  storyOpenings,
+  storyOpeningsDe,
+  pictureWords,
+} from './storybook';
 import { useAudio } from './use-audio';
+import Bilingual from './bilingual';
+import GospelReader from './gospel-reader';
 export type Saved = {
   version: number;
   completed: Record<string, string>;
   checks: number[];
   canDo?: number[];
+  gospel?: number[];
 };
 const stages = [
   'Picture story',
@@ -270,6 +278,9 @@ export default function Home({
             <TabsTrigger value="learn">
               <Map />
               Our neighbourhood
+            </TabsTrigger>
+            <TabsTrigger value="gospel">
+              <BookOpen /> Jesus’ life
             </TabsTrigger>
             <TabsTrigger value="stars">
               <Star />
@@ -531,7 +542,11 @@ export default function Home({
                         <figure className="story-scene">
                           <Scene world={lesson.world} />
                           <figcaption>
-                            {storyOpenings[lesson.id - 1]}
+                            <Bilingual
+                              de={storyOpeningsDe[lesson.id - 1]}
+                              en={storyOpenings[lesson.id - 1]}
+                              audio={audio}
+                            />
                           </figcaption>
                         </figure>
                         <details className="picture-hunt">
@@ -904,6 +919,9 @@ export default function Home({
               </>
             )}
           </TabsContent>
+          <TabsContent value="gospel">
+            <GospelReader saved={saved} setSaved={setSaved} audio={audio} />
+          </TabsContent>
           <TabsContent value="stars">
             <section className="discoveryhead">
               <div>
@@ -1199,7 +1217,10 @@ export default function Home({
         {audio.playing && (
           <div className="nowplaying" role="status">
             <Volume2 size={18} />
-            <span>German voice is playing</span>
+            <span>
+              {audio.playingLanguage === 'de' ? 'German' : 'English'} voice is
+              playing
+            </span>
             <button onClick={audio.stop}>
               <Square size={15} />
               Stop
