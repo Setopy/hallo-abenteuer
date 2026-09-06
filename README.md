@@ -11,7 +11,9 @@ A colourful, grown-up-supported German tutorial for young beginners, designed ar
 - A direct picture-story → speaking-role → real-life-play path. Detective games and sentence puzzles remain optional practice.
 - Props, a practical activity and a changed-detail challenge for every story. Completion requires the family to acknowledge trying the off-screen activity.
 - A speaking scrapbook with distinct, grown-up-observed skills. It asks the adult to observe changed-detail speaking on two days; it does not automatically evaluate pronunciation.
-- Existing local progress and older backups remain compatible. New backups include speaking observations and merge them without dropping prior progress.
+- Adult-managed family accounts use Sites sign-in with ChatGPT. Children choose a nickname and one of six animal avatars; they do not sign in to ChatGPT themselves.
+- Child progress is stored in D1 under the adult owner. Every read/write checks ownership. Revision checks prevent silent concurrent overwrites; simultaneous additions merge.
+- Existing local progress can be explicitly imported into the selected child profile. Older backups remain compatible. New backups include speaking observations.
 - No lost streaks, ads, public profiles, recording or learner leaderboard.
 - Parent speaking checkpoints, evidence-linked guidance, and progress backup/merge.
 
@@ -34,16 +36,20 @@ pnpm test
 pnpm run build:pages
 ```
 
-`dist-pages/` is a static, repository-subpath-compatible site. GitHub Actions checks and publishes pushes to main after Pages is enabled with GitHub Actions as its source. The original Sites target uses `pnpm dev` and `pnpm build`.
+`dist-pages/` is a static handoff to the canonical Sites account experience. It offers export of earlier GitHub-origin progress before moving. GitHub Pages cannot host the authenticated database service. GitHub Actions checks and publishes pushes to main after Pages is enabled with GitHub Actions as its source. The original Sites target uses `pnpm dev` and `pnpm build`.
 
 ## Privacy and audio
 
-Progress stays in local browser storage. The site collects no names or voice recordings. Fictional names can be used in all role-play. Device speech engines may use their own online services. German voice availability and quality depend on the operating system. The site requires internet and does not promise offline operation.
+Profiles store a nickname, preset avatar and learning progress, linked to the adult’s platform user ID in D1. No child email, date of birth or voice recording is requested. Nicknames should be pretend names. The account is shared by its children; profiles are not password-isolated from siblings. Adult authentication is provided by the Sites dispatcher and requires an adult ChatGPT account. Fictional names can be used in all role-play. Device speech engines may use their own online services. German voice availability and quality depend on the operating system. The site requires internet and does not promise offline operation.
 
 ## Validation
 
-Automated tests cover curriculum completeness, quiz choice uniqueness, sentence puzzles, progress validation, repeat completion, backup merging and German voice selection. TypeScript and both production targets are checked. Browser interaction and human listening are separate, unperformed checks. WebMCP registration, progress reading, valid mission opening and invalid-input rejection were verified in the supported browser tool context; no discoveries were awarded by opening a mission. That verification predates the storybook redesign; the registration behavior is retained.
+Automated tests cover curriculum completeness, quiz choice uniqueness, sentence puzzles, progress validation, repeat completion, backup merging and German voice selection. TypeScript and both production targets are checked. Browser interaction and human listening are separate, unperformed checks. Local API integration checks cover unauthenticated requests, profile creation, separate child progress, stale revision conflicts, cross-origin rejection and another owner’s profile protection. WebMCP registration, progress reading, valid mission opening and invalid-input rejection were verified in the supported browser tool context; no discoveries were awarded by opening a mission. That verification predates the storybook redesign; the registration behavior is retained.
 
 ## Assets and sources
 
 Original generated storybook fox illustration and twelve new picture-book scenes. The three full-scene sheets are displayed using SVG viewports; no illustration is drawn in CSS or SVG. Lesson content is original. Parent source links include Goethe-Institut, Cambridge English and Council of Europe, checked 5 September 2026. This independent project is not affiliated with those organisations.
+
+## Database
+
+Generate schema migrations with `pnpm exec drizzle-kit generate`. The Sites deployment applies the generated Drizzle migration before publishing. Do not rewrite applied migrations. Only profile selection and pending saves are held in memory; the database is the progress source of truth. Wait for Saved before leaving a device.
