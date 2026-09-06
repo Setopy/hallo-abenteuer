@@ -27,17 +27,20 @@ import {
   shuffled,
   isBuilt,
 } from '@/lib/learning.mjs';
+import { places, storyOpenings, pictureWords } from './storybook';
 import { useAudio } from './use-audio';
 type Saved = {
   version: number;
   completed: Record<string, string>;
   checks: number[];
+  canDo?: number[];
 };
 const stages = [
-  'Listen & copy',
-  'Play detective',
+  'Picture story',
+  'Word play',
   'Build a sentence',
-  'Let’s chat',
+  'My speaking role',
+  'Out into the world',
 ];
 const checks = [
   'Greet someone, give a pretend name and ask theirs.',
@@ -50,6 +53,36 @@ const checks = [
   'Talk about an animal or a birthday using familiar phrases.',
   'Keep a 3–5 minute supported chat going across familiar topics, with pauses and repair phrases.',
 ];
+function Scene({
+  world,
+  className = '',
+  decorative = false,
+}: {
+  world: number;
+  className?: string;
+  decorative?: boolean;
+}) {
+  const quadrant = world % 4;
+  return (
+    <svg
+      className={className}
+      viewBox={`${(quadrant % 2) * 768} ${Math.floor(quadrant / 2) * 512} 768 512`}
+      role={decorative ? undefined : 'img'}
+      aria-label={decorative ? undefined : places[world].alt}
+      aria-hidden={decorative || undefined}
+      focusable="false"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <image
+        href={`./scenes/sheet-${Math.floor(world / 4) + 1}.webp`}
+        x="0"
+        y="0"
+        width="1536"
+        height="1024"
+      />
+    </svg>
+  );
+}
 export default function Home() {
   const [tab, setTab] = useState('learn'),
     [saved, setSaved] = useState<Saved>(emptyProgress),
@@ -58,7 +91,6 @@ export default function Home() {
     [world, setWorld] = useState<number | null>(null),
     [lesson, setLesson] = useState<Lesson | null>(null),
     [step, setStep] = useState(0),
-    [card, setCard] = useState(0),
     [quiz, setQuiz] = useState(0),
     [order, setOrder] = useState<number[]>([0, 1, 2, 3]),
     [options, setOptions] = useState<number[]>([0, 1, 2, 3]),
@@ -70,7 +102,8 @@ export default function Home() {
     [turn, setTurn] = useState(0),
     [reveal, setReveal] = useState(false),
     [said, setSaid] = useState(false),
-    [done, setDone] = useState(false);
+    [done, setDone] = useState(false),
+    [outside, setOutside] = useState(false);
   const audio = useAudio(),
     heading = useRef<HTMLHeadingElement>(null),
     file = useRef<HTMLInputElement>(null);
@@ -106,14 +139,13 @@ export default function Home() {
     audio.stop();
     setFeedback('');
     if (lesson) heading.current?.focus();
-  }, [tab, lesson, step, card, quiz, turn, done]);
+  }, [tab, lesson, step, quiz, turn, done]);
   const count = Object.keys(saved.completed).length;
   function start(id: number) {
     const chosen = lessons.find((l) => l.id === id);
     if (!chosen) return;
     setLesson(chosen);
     setStep(0);
-    setCard(0);
     setQuiz(0);
     setOrder(shuffled([0, 1, 2, 3]));
     setOptions(shuffled([0, 1, 2, 3]));
@@ -126,6 +158,7 @@ export default function Home() {
     setReveal(false);
     setSaid(false);
     setDone(false);
+    setOutside(false);
     setTab('learn');
   }
   function nextStep() {
@@ -149,7 +182,7 @@ export default function Home() {
     }
   }
   function finish() {
-    if (!lesson || !said) return;
+    if (!lesson || !outside) return;
     setSaved((s) => markComplete(s, lesson.id));
     setDone(true);
   }
@@ -245,13 +278,13 @@ export default function Home() {
       <header>
         <a href="./" className="brand">
           hallo<span>!</span>
-          <small>Little words. Big adventures.</small>
+          <small>Our German picture book</small>
         </a>
         <div className="header-badges">
           <span className="pill">GERMAN FOR LITTLE EXPLORERS</span>
           <span className="stars">
             <Star size={18} fill="currentColor" />
-            {count} discoveries
+            Storybook edition
           </span>
         </div>
       </header>
@@ -260,11 +293,11 @@ export default function Home() {
           <TabsList className="nav">
             <TabsTrigger value="learn">
               <Map />
-              My adventures
+              Our neighbourhood
             </TabsTrigger>
             <TabsTrigger value="stars">
               <Star />
-              My discoveries
+              What I can say
             </TabsTrigger>
             <TabsTrigger value="grownups">
               <Heart />
@@ -288,41 +321,37 @@ export default function Home() {
               <>
                 {world === null ? (
                   <>
-                    <section className="welcome">
+                    <section className="bookwelcome">
+                      <img
+                        src="./fox-adventure.webp"
+                        width="1536"
+                        height="1024"
+                        alt="Fino the fox welcomes you to our colourful neighbourhood"
+                      />
                       <div>
-                        <p className="eyebrow">READY, LITTLE EXPLORER?</p>
-                        <h1>
-                          Your adventure
-                          <br />
-                          starts with <em>Hallo!</em>
-                        </h1>
+                        <p className="eyebrow">OPEN YOUR GERMAN PICTURE BOOK</p>
+                        <h1>Where shall we go today?</h1>
                         <p>
-                          Listen. Play. Say something new.
-                          <br />A little German, a little every day.
+                          Meet a friend. Hear their story. Join the
+                          conversation.
                         </p>
                         <button
                           className="primary"
                           onClick={() => start(nextLesson(saved))}
                         >
-                          {count ? 'My next mini-mission' : 'Let’s say hello'}{' '}
+                          {count ? 'Continue our story' : 'Meet a new friend'}{' '}
                           <ArrowRight size={20} />
                         </button>
-                        <span className="small">
-                          About 10 minutes · then try it with a grown-up
-                        </span>
+                        <p className="small">
+                          One short story together · then play it away from the
+                          screen
+                        </p>
                       </div>
-                      <img
-                        className="hero-art"
-                        src="./fox-adventure.webp"
-                        alt="A friendly fox with a blue backpack waves in a colourful village park"
-                        width="1536"
-                        height="1024"
-                      />
                     </section>
                     <div className="sectionhead">
                       <div>
                         <p className="eyebrow">12 PLACES TO EXPLORE</p>
-                        <h2>Pick a little adventure</h2>
+                        <h2>Choose a place to visit</h2>
                       </div>
                       <span className="small">
                         All adventures are open. Go at your pace.
@@ -339,17 +368,20 @@ export default function Home() {
                             key={w.title}
                             onClick={() => setWorld(i)}
                           >
+                            <Scene className="place-art" world={i} />
                             <div className="worldtop">
                               <span className="emoji" aria-hidden>
                                 {w.icon}
                               </span>
                               <span>{String(i + 1).padStart(2, '0')}</span>
                             </div>
-                            <h3>{w.title}</h3>
+                            <h3>{places[i].name}</h3>
                             <p>{w.subtitle}</p>
                             <div className="worldfoot">
                               <span>
-                                {n ? `${n}/3 discoveries` : '3 mini-missions'}
+                                {n
+                                  ? `${n}/3 stories explored`
+                                  : '3 little stories'}
                               </span>
                               <ArrowRight size={19} />
                             </div>
@@ -360,8 +392,8 @@ export default function Home() {
                     <section className="playnote">
                       <Sparkles />
                       <p>
-                        <b>No rush. No lost streaks.</b> Every time you try a
-                        German word, you are exploring.
+                        <b>Bring a toy. Bring your imagination.</b> Every place
+                        has a story you can act out together.
                       </p>
                     </section>
                   </>
@@ -372,12 +404,10 @@ export default function Home() {
                       All adventures
                     </button>
                     <section className={'worldheading color' + (world % 4)}>
-                      <span className="emoji" aria-hidden>
-                        {worlds[world].icon}
-                      </span>
+                      <Scene className="place-banner" world={world} />
                       <div>
                         <p className="eyebrow">ADVENTURE {world + 1}</p>
-                        <h1>{worlds[world].title}</h1>
+                        <h1>{places[world].name}</h1>
                         <p>{worlds[world].subtitle}</p>
                       </div>
                     </section>
@@ -386,11 +416,16 @@ export default function Home() {
                         .filter((l) => l.world === world)
                         .map((l, i) => (
                           <article className="panel missioncard" key={l.id}>
-                            <span className="pill">MINI-MISSION {i + 1}</span>
+                            <Scene
+                              className="chapter-art"
+                              world={l.world}
+                              decorative
+                            />
+                            <span className="pill">STORY {i + 1}</span>
                             <h2>{l.title}</h2>
                             <p lang="de">{l.phrases[1].de}</p>
                             <p className="small">
-                              Listen → play → build → chat
+                              Picture story → speaking role → real-life play
                             </p>
                             <button
                               className="primary"
@@ -404,7 +439,7 @@ export default function Home() {
                             {saved.completed[l.id] && (
                               <span className="earned">
                                 <Check size={16} />
-                                Discovery collected
+                                Story explored
                               </span>
                             )}
                           </article>
@@ -415,9 +450,7 @@ export default function Home() {
               </>
             ) : done ? (
               <section className="celebrate panel">
-                <span className="celebrate-star" aria-hidden>
-                  🌟
-                </span>
+                <Scene className="finish-art" world={lesson.world} />
                 <p className="eyebrow">YOU TRIED SOMETHING NEW!</p>
                 <h1 ref={heading} tabIndex={-1}>
                   Wunderbar!
@@ -426,12 +459,13 @@ export default function Home() {
                   Wonderful! You explored <b>{lesson.title}</b>.
                 </p>
                 <div className="stamp">
-                  <Check /> Discovery {lesson.id} collected
+                  <BookOpen /> Your story is ready to tell again
                 </div>
                 <p>Now take your German off the screen.</p>
                 <blockquote>{lesson.mission}</blockquote>
                 <p className="small">
-                  Discoveries celebrate practice, not a speaking test.
+                  Trying a story is practice. Your grown-up can record what you
+                  can say in “What I can say”.
                 </p>
                 <div className="actions">
                   <button
@@ -465,7 +499,7 @@ export default function Home() {
                     Take a break
                   </button>
                   <span>
-                    Mission {lesson.id} · {lesson.title}
+                    Story {lesson.id} · {lesson.title}
                   </span>
                   <label className="speed">
                     <Switch
@@ -479,29 +513,36 @@ export default function Home() {
                     Slow voice
                   </label>
                 </div>
-                <div className="steptrack" aria-label="Mission steps">
-                  {stages.map((name, i) => (
+                <div className="steptrack" aria-label="Story chapters">
+                  {[0, 3, 4].map((value, index) => (
                     <span
-                      className={
-                        step === i ? 'current' : step > i ? 'passed' : ''
-                      }
-                      key={name}
+                      key={value}
+                      className={step === value ? 'current' : ''}
+                      aria-current={step === value ? 'step' : undefined}
                     >
-                      <b>{step > i ? '✓' : i + 1}</b>
-                      {name}
+                      <b>{index + 1}</b>
+                      {stages[value]}
                     </span>
                   ))}
+                  {(step === 1 || step === 2) && (
+                    <span className="current">Optional word practice</span>
+                  )}
                 </div>
                 <Progress
-                  aria-label="Mission progress"
-                  value={(step / 4) * 100}
+                  aria-label="Story progress"
+                  value={step === 0 ? 0 : step < 3 ? 20 : step === 3 ? 50 : 80}
                 />
                 <div className="lessonlayout">
                   <section className="panel lessonpanel">
+                    {(step === 1 || step === 2) && (
+                      <button className="back" onClick={() => setStep(3)}>
+                        Go to my speaking role <ArrowRight size={17} />
+                      </button>
+                    )}
                     <p className="eyebrow">
                       {stages[step]}{' '}
                       {step === 0
-                        ? `· ${card + 1}/4`
+                        ? '· read together'
                         : step === 1
                           ? `· ${quiz + 1}/4`
                           : ''}
@@ -509,34 +550,72 @@ export default function Home() {
                     {step === 0 ? (
                       <>
                         <h2 ref={heading} tabIndex={-1}>
-                          Listen. Copy. Make it yours.
+                          {lesson.title}
                         </h2>
-                        <div className="phrasecard">
-                          <span aria-hidden>💬</span>
-                          <h3 lang="de">{lesson.phrases[card].de}</h3>
-                          <p>{lesson.phrases[card].en}</p>
-                          {listen(lesson.phrases[card].de)}
+                        <figure className="story-scene">
+                          <Scene world={lesson.world} />
+                          <figcaption>
+                            {storyOpenings[lesson.id - 1]}
+                          </figcaption>
+                        </figure>
+                        <details className="picture-hunt">
+                          <summary>Look, point and listen</summary>
+                          <p>
+                            Find these in the picture. Point, hear the German,
+                            then say it together.
+                          </p>
+                          <div className="picture-words">
+                            {pictureWords[lesson.world].map((word) => (
+                              <div key={word.de}>
+                                <strong lang="de">{word.de}</strong>
+                                <span>{word.en}</span>
+                                {listen(word.de, 'Hear word')}
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                        <div className="story-task">
+                          <b>Our little adventure</b>
+                          <p>{lesson.mission}</p>
                         </div>
                         <p className="instruction">
-                          Listen once. Say it twice. Try a silly voice!
+                          Two pretend friends are talking. Tap each line to
+                          listen. You can change their names.
                         </p>
+                        <div className="story-dialogue">
+                          {lesson.phrases.map((phrase, index) => (
+                            <div
+                              className={'story-line voice' + (index % 2)}
+                              key={phrase.de}
+                            >
+                              <span className="speaker-portrait" aria-hidden>
+                                {index % 2 ? '🧒' : '🦊'}
+                              </span>
+                              <div>
+                                <b>
+                                  {index % 2
+                                    ? 'Your character'
+                                    : 'Fino plays a friend'}
+                                </b>
+                                <h3 lang="de">{phrase.de}</h3>
+                                <p>{phrase.en}</p>
+                                {listen(phrase.de, 'Hear this line')}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                         <div className="actions">
                           <button
-                            className="secondary"
-                            disabled={card === 0}
-                            onClick={() => setCard((c) => c - 1)}
+                            className="primary"
+                            onClick={() => setStep(3)}
                           >
-                            <ArrowLeft size={17} />
-                            Back
+                            I’ll be the other friend <ArrowRight size={18} />
                           </button>
                           <button
-                            className="primary"
-                            onClick={() =>
-                              card === 3 ? nextStep() : setCard((c) => c + 1)
-                            }
+                            className="secondary"
+                            onClick={() => setStep(1)}
                           >
-                            {card === 3 ? 'Let’s play' : 'Next phrase'}
-                            <ArrowRight size={17} />
+                            Practise with word games first
                           </button>
                         </div>
                       </>
@@ -695,14 +774,19 @@ export default function Home() {
                           )}
                         </div>
                       </>
-                    ) : (
+                    ) : step === 3 ? (
                       <>
+                        <Scene
+                          className="conversation-art"
+                          world={lesson.world}
+                        />
                         <h2 ref={heading} tabIndex={-1}>
-                          Your turn to talk!
+                          You’re in the story!
                         </h2>
                         <p>
-                          Ask a grown-up or a toy to be your partner. Say your
-                          answer before you peek.
+                          You play the other friend. Your grown-up or a toy
+                          plays Fino. Listen to Fino, then answer before you
+                          peek.
                         </p>
                         <div className="chatbubble partner">
                           <b>YOUR PARTNER SAYS</b>
@@ -754,19 +838,76 @@ export default function Home() {
                             onClick={() =>
                               turn === 0
                                 ? (setTurn(1), setReveal(false), setSaid(false))
-                                : finish()
+                                : setStep(4)
                             }
                           >
                             {turn === 0
                               ? 'Keep chatting'
-                              : 'Collect my discovery'}{' '}
+                              : 'Take our story into real life'}{' '}
                             <Star size={18} />
                           </button>
                         </div>
                       </>
+                    ) : (
+                      <>
+                        <h2 ref={heading} tabIndex={-1}>
+                          Now make the story yours.
+                        </h2>
+                        <Scene
+                          className="conversation-art"
+                          world={lesson.world}
+                        />
+                        <div className="takeaway">
+                          <p className="eyebrow">
+                            LEAVE THE SCREEN · BRING A GROWN-UP
+                          </p>
+                          <h3>Set the scene</h3>
+                          <p>{places[lesson.world].props}</p>
+                          <h3>Try it together</h3>
+                          <p>{lesson.mission}</p>
+                          <h3>A little surprise</h3>
+                          <p>{lesson.swap}</p>
+                          <p>
+                            Swap speaking roles. Try again tomorrow with the
+                            words hidden.
+                          </p>
+                        </div>
+                        <label className="saycheck">
+                          <input
+                            type="checkbox"
+                            checked={outside}
+                            onChange={(e) => setOutside(e.target.checked)}
+                          />{' '}
+                          We tried our real-life play together.
+                        </label>
+                        <div className="actions">
+                          <button
+                            className="primary"
+                            disabled={!outside}
+                            onClick={finish}
+                          >
+                            Save our story <BookOpen size={18} />
+                          </button>
+                          <button
+                            className="secondary"
+                            onClick={() => setStep(0)}
+                          >
+                            Read the story again
+                          </button>
+                        </div>
+                        <p className="small">
+                          You can leave this page open and come back after
+                          playing.
+                        </p>
+                      </>
                     )}
                   </section>
                   <aside>
+                    <Scene
+                      className="side-art"
+                      world={lesson.world}
+                      decorative
+                    />
                     <section className="tipcard">
                       <span aria-hidden>💡</span>
                       <h3>A little helping hand</h3>
@@ -790,43 +931,71 @@ export default function Home() {
           <TabsContent value="stars">
             <section className="discoveryhead">
               <div>
-                <p className="eyebrow">LOOK WHAT YOU’VE EXPLORED</p>
+                <p className="eyebrow">OUR SPEAKING SCRAPBOOK</p>
                 <h1>
                   {count
-                    ? `${count} little discoveries!`
+                    ? 'Look what I can say!'
                     : 'Your adventure is just beginning.'}
                 </h1>
                 <p>
-                  Every stamp means you practised a mini-mission. Come back and
-                  play any one again.
+                  Exploring a story and using German in conversation are
+                  different steps. A grown-up can tick a speaking skill after
+                  hearing it on two different days, with a changed detail and
+                  the words hidden.
                 </p>
               </div>
               <div className="bigstar">
                 <Star size={46} fill="currentColor" />
-                <strong>{count}/36</strong>
+                <strong>{saved.canDo?.length || 0} skills</strong>
               </div>
             </section>
-            <div className="stampgrid">
+            <div className="scrapbook-grid">
               {lessons.map((l) => (
-                <button
-                  className={saved.completed[l.id] ? 'collected' : ''}
-                  key={l.id}
-                  onClick={() => start(l.id)}
-                >
-                  <span aria-hidden>
-                    {saved.completed[l.id] ? worlds[l.world].icon : '☆'}
-                  </span>
-                  <b>{l.title}</b>
-                  <small>
-                    {saved.completed[l.id] ? 'Play again' : 'Ready to explore'}
-                  </small>
-                </button>
+                <article className="speaking-card" key={l.id}>
+                  <Scene world={l.world} decorative />
+                  <div>
+                    <p className="eyebrow">
+                      {saved.completed[l.id]
+                        ? 'STORY EXPLORED'
+                        : 'A STORY TO TRY'}
+                    </p>
+                    <h2>{l.title}</h2>
+                    <p>{l.mission}</p>
+                    <details>
+                      <summary>Grown-up: check this in a new situation</summary>
+                      <p>
+                        {l.swap} Hide the text. Listen on two separate days. A
+                        short answer and a request for help are okay.
+                      </p>
+                      <label className="saycheck">
+                        <input
+                          type="checkbox"
+                          checked={saved.canDo?.includes(l.id) || false}
+                          onChange={() =>
+                            setSaved((s) => ({
+                              ...s,
+                              canDo: s.canDo?.includes(l.id)
+                                ? s.canDo.filter((id) => id !== l.id)
+                                : [...(s.canDo || []), l.id],
+                            }))
+                          }
+                        />{' '}
+                        I have heard the child use this with a changed detail on
+                        two days.
+                      </label>
+                    </details>
+                    <span className="skill-state">
+                      {saved.canDo?.includes(l.id)
+                        ? '✓ Grown-up observed this skill'
+                        : 'Still growing — keep talking together'}
+                    </span>
+                    <button className="secondary" onClick={() => start(l.id)}>
+                      Visit this story
+                    </button>
+                  </div>
+                </article>
               ))}
             </div>
-            <p className="small">
-              There are no lost streaks and no race. Your stamps stay here when
-              you take a break.
-            </p>
           </TabsContent>
           <TabsContent value="grownups">
             <section className="panel parentintro">
@@ -913,11 +1082,14 @@ export default function Home() {
               </details>
             </section>
             <section className="panel parentsection">
-              <h2>One mini-mission per week. Many ways to use it.</h2>
+              <h2>One picture story per week. Many ways to use it.</h2>
               <div className="routine">
                 <div>
                   <b>Day 1</b>
-                  <p>Hear and copy the four phrases. Use toys and gestures.</p>
+                  <p>
+                    Explore the picture and hear the short conversation. Use
+                    toys and gestures.
+                  </p>
                 </div>
                 <div>
                   <b>Day 2</b>

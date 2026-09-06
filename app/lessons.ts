@@ -245,8 +245,8 @@ const rows: Row[] = [
     [
       ['Verstehst du das?', 'Do you understand that?'],
       ['Ich verstehe das nicht.', 'I do not understand that.'],
-      ['Noch einmal, bitte?', 'Again, please?'],
-      ['Kannst du mir helfen?', 'Can you help me?'],
+      ['Ich helfe dir.', 'I will help you.'],
+      ['Kannst du das noch einmal sagen?', 'Can you say that again?'],
     ],
     'These are super-useful repair phrases. Asking for help is good speaking.',
     'A grown-up says a familiar phrase too quietly. Ask for it again, then swap roles.',
