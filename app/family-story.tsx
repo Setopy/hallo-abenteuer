@@ -38,7 +38,8 @@ export default function FamilyStory() {
           </span>
         </div>
       </div>
-    <div className="grazeet-moments">
+    <figure className="grazeet-panorama"><img src="./brand/family-day.jpg" alt="Six family members smiling behind colourful science-themed letters" width="1448" height="1086" loading="lazy"/><figcaption>Gemeinsam entdecken · Discovering together</figcaption></figure>
+      <div className="grazeet-moments">
         <figure><img src="./brand/discover.jpg" alt="A child exploring outdoors with a phone in hand" width="750" height="1000" loading="lazy"/><figcaption>Neugier · Curiosity</figcaption></figure>
         <figure><img src="./brand/together.jpg" alt="Two children smiling and holding hands" width="750" height="1000" loading="lazy"/><figcaption>Zusammen · Together</figcaption></figure>
         <figure><img src="./brand/play.jpg" alt="Two children holding hands with their arms outstretched" width="750" height="1000" loading="lazy"/><figcaption>Freude · Joy</figcaption></figure>
