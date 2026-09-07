@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import AdultSignIn from './adult-sign-in';
+import { familyFetch, adultSignOut } from './email-auth';
 import Home, { Saved } from './storybook-app';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -20,7 +22,6 @@ type ApiResult = {
   profile: Profile;
   revision: number;
 };
-const signIn = '/signin-with-chatgpt?return_to=%2F';
 export default function Family() {
   const [profiles, setProfiles] = useState<Profile[]>([]),
     [loading, setLoading] = useState(true),
@@ -47,7 +48,7 @@ export default function Family() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('/api/family', { cache: 'no-store' });
+      const response = await familyFetch('/api/family', { cache: 'no-store' });
       if (response.status === 401) {
         setSigned(false);
         return;
@@ -103,7 +104,7 @@ export default function Family() {
         pending.current.delete(id);
         const current = records.current.find((p) => p.id === id)!;
         try {
-          const response = await fetch(
+          const response = await familyFetch(
             '/api/family/' + encodeURIComponent(id),
             {
               method: 'PUT',
@@ -185,7 +186,7 @@ export default function Family() {
     setCreating(true);
     setError('');
     try {
-      const response = await fetch(
+      const response = await familyFetch(
         editing
           ? '/api/family/' + encodeURIComponent(editing.id)
           : '/api/family',
@@ -334,17 +335,7 @@ export default function Family() {
             <>
               <p className="eyebrow">A LITTLE HELP FROM A GROWN-UP</p>
               <h1>A picture book for every child.</h1>
-              <p>
-                Grown-ups, sign in with your own ChatGPT account. Then each
-                child can choose a nickname and an apostle avatar.
-              </p>
-              <a className="primary" href={signIn} target="_top">
-                Adult sign in / create account <ArrowRight size={18} />
-              </a>
-              <p className="small">
-                Only the adult signs in to ChatGPT. Children use their profiles
-                here. Their progress follows your account to your other devices.
-              </p>
+              <AdultSignIn onAuthenticated={load} />
               {error && (
                 <button className="secondary" onClick={load}>
                   Try loading again
@@ -489,13 +480,16 @@ export default function Family() {
             </>
           )}
           {signed && (
-            <a
-              className="adult-signout"
-              href="/signout-with-chatgpt?return_to=%2F"
-              target="_top"
+            <button
+              className="adult-signout back"
+              onClick={() =>
+                adultSignOut().catch(() =>
+                  setError('Sign-out failed. Please try again.'),
+                )
+              }
             >
               <LogOut size={16} /> Grown-up: sign out of this family
-            </a>
+            </button>
           )}
         </section>
       </div>

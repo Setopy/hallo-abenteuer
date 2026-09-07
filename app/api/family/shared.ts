@@ -1,11 +1,29 @@
+import { headers } from 'next/headers';
+import { firebaseConfig } from '@/app/firebase-config';
+import { verifyFirebaseToken } from '@/lib/firebase-token.mjs';
 import { getChatGPTUser } from '@/app/chatgpt-auth';
 import { sameOriginWrite } from '@/lib/profiles.mjs';
 export const reply = (body: unknown, status = 200) =>
   Response.json(body, {
     status,
-    headers: { 'Cache-Control': 'private, no-store', Vary: 'Cookie' },
+    headers: {
+      'Cache-Control': 'private, no-store',
+      Vary: 'Cookie, Authorization',
+    },
   });
 export async function owner() {
+  const bearer = (await headers()).get('authorization');
+  if (bearer) {
+    if (!bearer.startsWith('Bearer ')) return undefined;
+    try {
+      return await verifyFirebaseToken(
+        bearer.slice(7),
+        firebaseConfig()?.projectId,
+      );
+    } catch {
+      return undefined;
+    }
+  }
   return (await getChatGPTUser())?.userId;
 }
 export async function readBody(request: Request) {

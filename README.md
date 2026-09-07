@@ -11,7 +11,7 @@ A colourful, grown-up-supported German tutorial for young beginners, designed ar
 - A direct picture-story → speaking-role → real-life-play path. Detective games and sentence puzzles remain optional practice.
 - Props, a practical activity and a changed-detail challenge for every story. Completion requires the family to acknowledge trying the off-screen activity.
 - A speaking scrapbook with distinct, grown-up-observed skills. It asks the adult to observe changed-detail speaking on two days; it does not automatically evaluate pronunciation.
-- Adult-managed family accounts use Sites sign-in with ChatGPT. Children choose a nickname and one of twelve illustrated apostle avatars; they do not sign in to ChatGPT themselves.
+- Adult-managed family accounts support Firebase email/password sign-in with verified email addresses. Existing Sites sign-in with ChatGPT remains available for earlier families. Children choose a nickname and one of twelve illustrated apostle avatars; they do not sign in to ChatGPT themselves.
 - Child progress is stored in D1 under the adult owner. Every read/write checks ownership. Revision checks prevent silent concurrent overwrites; simultaneous additions merge.
 - Existing local progress can be explicitly imported into the selected child profile. Older backups remain compatible. New backups include speaking observations.
 - No lost streaks, ads, public profiles, recording or learner leaderboard.
@@ -40,7 +40,7 @@ pnpm run build:pages
 
 ## Privacy and audio
 
-Profiles store a nickname, preset avatar and learning progress, linked to the adult’s platform user ID in D1. No child email, date of birth or voice recording is requested. Nicknames should be pretend names. The account is shared by its children; profiles are not password-isolated from siblings. Adult authentication is provided by the Sites dispatcher and requires an adult ChatGPT account. Fictional names can be used in all role-play. Device speech engines may use their own online services. German voice availability and quality depend on the operating system. The site requires internet and does not promise offline operation.
+Profiles store a nickname, preset avatar and learning progress, linked to the adult’s platform user ID in D1. No child email, date of birth or voice recording is requested. Nicknames should be pretend names. The account is shared by its children; profiles are not password-isolated from siblings. Adult email authentication is handled by Firebase; passwords are never stored in the app database. Existing ChatGPT accounts remain separate from Firebase accounts. The server verifies Firebase signatures, project audience, issuer, expiry and verified-email claims, then scopes each family to the project and adult UID. Fictional names can be used in all role-play. Device speech engines may use their own online services. German voice availability and quality depend on the operating system. The site requires internet and does not promise offline operation.
 
 ## Validation
 
@@ -61,3 +61,7 @@ All 36 neighbourhood story introductions have German and English text and langua
 Apostle avatars follow the twelve after Matthias joins in Acts 1:26. The collection distinguishes James son of Zebedee and James son of Alphaeus; Thaddaeus is also called Jude/Judas son of James. Revelation 21:12–14 places the tribes’ names on gates and apostles’ names on foundations. The exact names are not enumerated there. Illustrations are imagined, not authentic likenesses. Existing animal profiles are prompted to choose an apostle without losing progress. The owner-checked profile PATCH updates nickname/avatar independently of learning-progress revisions.
 
 Gospel sources: Mark 10:13–16; John 6:1–13; Mark 4:35–41; Luke 19:1–10; Luke 2:41–52; John 21:1–14. Original simplified retellings and original teaching questions, not verbatim Bible translations. Each story links to the passage for adult reading. Source passages checked 6 September 2026.
+
+## Email authentication configuration
+
+Set FIREBASE_PROJECT_ID, FIREBASE_API_KEY and FIREBASE_AUTH_DOMAIN in Sites runtime settings. These identify the Firebase web client; no service-account private key is required. Enable Firebase Email/Password and authorize the app domain. Without complete configuration, the earlier ChatGPT sign-in remains available. Firebase Spark quotas apply. Automated signed-token tests cover valid identity, wrong signatures, wrong issuer/audience, invalid dates, unverified email and invalid UIDs. Actual inbox delivery and a real cross-device parent session require a user-owned test account.
