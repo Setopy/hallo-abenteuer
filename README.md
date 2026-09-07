@@ -1,4 +1,4 @@
-# ZionPro Lernraum
+# grazeetraum
 
 A colourful, grown-up-supported German tutorial for young beginners, designed around an eight-year-old's everyday world.
 
@@ -65,3 +65,7 @@ Gospel sources: Mark 10:13–16; John 6:1–13; Mark 4:35–41; Luke 19:1–10; 
 ## Email authentication configuration
 
 Set FIREBASE_PROJECT_ID, FIREBASE_API_KEY and FIREBASE_AUTH_DOMAIN in Sites runtime settings. These identify the Firebase web client; no service-account private key is required. Enable Firebase Email/Password and authorize the app domain. Without complete configuration, the earlier ChatGPT sign-in remains available. Firebase Spark quotas apply. Automated signed-token tests cover valid identity, wrong signatures, wrong issuer/audience, invalid dates, unverified email and invalid UIDs. Actual inbox delivery and a real cross-device parent session require a user-owned test account.
+
+## grazeetraum family branding
+
+User-provided family photographs appear on the welcome screen and parent introduction. The portrait has an AI-assisted bag removal; the jumping photograph is retained with display orientation normalized and metadata omitted from the web copy. Original files are untouched. grazeetraum retains the bilingual Lernraum identity.

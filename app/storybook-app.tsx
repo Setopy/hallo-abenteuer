@@ -14,6 +14,7 @@ import {
   BookOpen,
   Sparkles,
 } from 'lucide-react';
+import FamilyStory from './family-story';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
@@ -204,7 +205,7 @@ export default function Home({
       setNotice('Your backup has been added to this child’s progress.');
     } catch {
       setNotice(
-        'That is not a valid ZionPro Lernraum backup. Your discoveries are unchanged.',
+        'That is not a valid grazeetraum backup. Your discoveries are unchanged.',
       );
     }
     if (file.current) file.current.value = '';
@@ -261,8 +262,8 @@ export default function Home({
       </a>
       <header>
         <a href="./" className="brand">
-          Zion<span>Pro</span>
-          <small>Lernraum · German for young explorers</small>
+          grazee<span>traum</span>
+          <small>German for young explorers</small>
         </a>
         <div className="header-badges">
           <span className="pill">GERMAN FOR LITTLE EXPLORERS</span>
@@ -992,6 +993,7 @@ export default function Home({
             </div>
           </TabsContent>
           <TabsContent value="grownups">
+            <FamilyStory />
             <section className="panel parentintro">
               <p className="eyebrow">A REALISTIC PLAN FOR AN EIGHT-YEAR-OLD</p>
               <h1>

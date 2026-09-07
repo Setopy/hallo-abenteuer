@@ -2079,3 +2079,29 @@ body {
 .family-panel form>.primary { margin-top:20px; }
 
 .adult-message { display: block; margin: 16px 0; }
+
+/* GraZeeT family identity */
+.brand { color: #164d66; }
+.brand > span { color: #cf6738; }
+.grazeet-welcome { background: #164d66; color: #fffaf0; display: flex; flex-direction: column; }
+.grazeet-joy { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: contain; display: block; }
+.grazeet-welcome-copy { padding: 30px; }
+.grazeet-welcome-copy .eyebrow { color: #ffe18a; font-size: 10px; letter-spacing: .13em; }
+.grazeet-welcome-copy h2 { font-family: Georgia,serif; font-size: clamp(2rem,4vw,3rem); line-height: 1.08; margin: 14px 0; }
+.grazeet-welcome-copy p { line-height: 1.65; }
+.grazeet-tag { display: inline-block; border: 1px solid #82a9b4; border-radius: 30px; padding: 8px 13px; margin-top: 20px; font-size: 12px; }
+.grazeet-story { display: grid; grid-template-columns: minmax(0,.75fr) minmax(0,1.25fr); gap: clamp(24px,5vw,64px); align-items: center; margin: 56px 0 28px; padding: clamp(20px,4vw,42px); background: #f4eddf; border-radius: 28px; }
+.grazeet-story figure { margin: 0; padding: 10px 10px 14px; background: white; border-radius: 16px; box-shadow: 0 10px 30px #47372812; transform: rotate(-2deg); }
+.grazeet-story img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.grazeet-story figcaption { text-align: center; font-size: 11px; padding-top: 13px; color: #526574; }
+.grazeet-story h2 { color: #164d66; font: bold clamp(1.8rem,3.4vw,2.9rem)/1.12 Georgia,serif; margin: 14px 0 22px; }
+.grazeet-story p { line-height: 1.75; margin-bottom: 16px; }
+.grazeet-values { display: flex; flex-wrap: wrap; gap: 20px; border-top: 1px solid #d8ccba; padding-top: 20px; margin-top: 26px; font-weight: 700; color: #164d66; }
+.grazeet-values small { display: block; font-weight: 400; margin-top: 5px; font-size: 12px; }
+@media(max-width:720px) { .grazeet-story { grid-template-columns: 1fr; } .grazeet-story figure { max-width: 340px; margin: auto; } .grazeet-welcome { display: grid; grid-template-columns: 1fr 1fr; align-items: center; } .grazeet-welcome-copy { padding: 16px; } .grazeet-welcome-copy h2 { font-size: 1.7rem; } .grazeet-welcome-copy p { font-size: 12px; } .grazeet-tag { font-size: 10px; padding: 6px 8px; margin-top: 10px; } }
+@media(max-width:380px) { .grazeet-welcome { grid-template-columns: 1fr; } }
+.grazeet-moments { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.grazeet-moments figure { transform: none; }
+.grazeet-moments figure:nth-child(2) { transform: rotate(2deg); }
+.grazeet-moments img { aspect-ratio: 3 / 4; object-fit: contain; }
+@media(max-width:520px) { .grazeet-moments { gap: 8px; } .grazeet-moments figure { padding: 5px; border-radius: 9px; } .grazeet-moments figcaption { font-size: 9px; line-height: 1.4; padding-top: 8px; } }

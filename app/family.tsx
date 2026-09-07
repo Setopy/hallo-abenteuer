@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import AdultSignIn from './adult-sign-in';
 import { familyFetch, adultSignOut } from './email-auth';
+import FamilyStory from './family-story';
 import Home, { Saved } from './storybook-app';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -314,17 +315,29 @@ export default function Family() {
   return (
     <main className="family-shell">
       <a href="./" className="brand">
-        Zion<span>Pro</span>
-        <small>Lernraum · German for young explorers</small>
+        grazee<span>traum</span><small>German for young explorers</small>
       </a>
       <div className="family-book">
-        <img
-          className="family-art"
-          src="./fox-adventure.webp"
-          alt="Fino the fox welcomes your family"
-          width="1536"
-          height="1024"
-        />
+        <aside className="grazeet-welcome">
+          <img
+            className="grazeet-joy"
+            src="./brand/joy.jpg"
+            alt="Three children sharing a joyful moment outdoors"
+            width="1050"
+            height="1400"
+            fetchPriority="high"
+          />
+          <div className="grazeet-welcome-copy">
+            <p className="eyebrow">KLEINE SCHRITTE. GROSSE FREUDE.</p>
+            <h2>
+              Little steps.
+              <br />
+              Big joy.
+            </h2>
+            <p>A space to wonder, speak and grow together.</p>
+            <span className="grazeet-tag">Deutsch lernen · Learn German</span>
+          </div>
+        </aside>
         <section className="family-panel">
           {error && (
             <div role="alert" className="family-error">
@@ -493,6 +506,7 @@ export default function Family() {
           )}
         </section>
       </div>
+      <FamilyStory />
       <p className="family-footnote">
         Child profiles are shared within this adult account. They do not have
         separate passwords. Use the same adult account on another device to find
