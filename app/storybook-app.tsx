@@ -204,7 +204,7 @@ export default function Home({
       setNotice('Your backup has been added to this child’s progress.');
     } catch {
       setNotice(
-        'That is not a valid Hallo! backup. Your discoveries are unchanged.',
+        'That is not a valid ZionPro Lernraum backup. Your discoveries are unchanged.',
       );
     }
     if (file.current) file.current.value = '';
@@ -261,8 +261,8 @@ export default function Home({
       </a>
       <header>
         <a href="./" className="brand">
-          hallo<span>!</span>
-          <small>Our German picture book</small>
+          Zion<span>Pro</span>
+          <small>Lernraum · German for young explorers</small>
         </a>
         <div className="header-badges">
           <span className="pill">GERMAN FOR LITTLE EXPLORERS</span>

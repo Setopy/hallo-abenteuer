@@ -34,7 +34,7 @@ function Bridge() {
   }
   return (
     <main className="family-shell">
-      <h1>Your picture book now has child profiles.</h1>
+      <h1>Welcome to ZionPro Lernraum.</h1>
       <p>
         Sign in with an adult account to keep each child’s progress across
         devices.
@@ -52,7 +52,7 @@ function Bridge() {
       )}
       <p>
         <a className="primary" href={site}>
-          Open our family picture book →
+          Open ZionPro Lernraum →
         </a>
       </p>
     </main>

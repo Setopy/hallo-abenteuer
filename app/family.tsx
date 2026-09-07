@@ -314,8 +314,8 @@ export default function Family() {
   return (
     <main className="family-shell">
       <a href="./" className="brand">
-        hallo<span>!</span>
-        <small>Our German picture book</small>
+        Zion<span>Pro</span>
+        <small>Lernraum · German for young explorers</small>
       </a>
       <div className="family-book">
         <img

@@ -1,4 +1,4 @@
-# Hallo! Abenteuer
+# ZionPro Lernraum
 
 A colourful, grown-up-supported German tutorial for young beginners, designed around an eight-year-old's everyday world.
 

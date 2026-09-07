@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
-  title: 'Hallo! Abenteuer — German for Kids',
+  title: 'ZionPro Lernraum — German for Kids',
   description:
     'Playful German lessons, listening games and real-world conversations for young beginners.',
 };
